@@ -72,9 +72,15 @@ ancestor_r tries its recursive clause first, so P binds to liz, whose subtree is
 
 ancestor tries its base clause first, so parent(X, jim) gives X=pat first. The recursive clause then scans parent(X, P) in file order and asks ancestor(P, jim) for each fact, and the successes give X=bob second and X=tom third. The count is 3 with 1 base answer plus 2 recursive answers.
 
+Correction:
+`parent(tom,bob)` comes before `parent(bob,pat)`. The recursive clause follow the file order top to bottom, I read it from bottom up, therefore X=tom should be second. 
+
 ## P11
 
 reach tries its first clause first, whose body starts with another call to reach with the same first argument. That call matches the same clause again, so the question never gets smaller, and no edge fact is read, so nothing fails or backtracks and clause 2 is never reached. Because the search never reaches even the first answer, the first field is false, the second is none, and the count is 0.
+
+Correction:
+Since the search never reaches an answer, there is no answer so all three fields should be unbounded. I assumed no answer meant that it was 0 and false.
 
 ## P12
 
@@ -92,6 +98,9 @@ The third argument is bound and the first two are not, so join runs backward. Cl
 ## P15
 
 The goals run left to right, so X > 2 is tried before elem has bound X. X is unbound and > needs numbers on both sides, so Prolog throws an instantiation error instead of failing. The search stops there and never reaches `elem`, so the first field, the second field is unbounded, and the count is error.
+
+Correction:
+Since the prolog throws an error, all fields must then be error and not unbounded which is different from P11 in which the answer was simply never found.
 
 ## P16
 
