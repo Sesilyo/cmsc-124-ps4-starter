@@ -34,6 +34,8 @@ nothing and the search ends after one answer.
 
 `parent(tom, X)` checks for atom `tom`'s children as variable `X`s via **unification** against facts in `kb.pl`. By **recursion**, the child-chain is `tom `$\to$ `liz` and `tom` $\to$ `bob`. That is why these are the first and second answer respectively, with count as `2`.
 
+^^^^^^ [NO RULE MISSED]: error was only overlooked, mistyped names. The rule is understood.
+
 ## P02
 
 `parent(tom, bob)` is a fact and **unification** checks if the case matches against any data in `kp.pl`, which it does match one fact therefore, the only answer is `true` and count is `1`.
@@ -45,6 +47,8 @@ nothing and the search ends after one answer.
 ## P04
 
 `=` is **unification** and binds `Y=b` $\to$ `X=f(Y,a)` which resulted to `X=f(b,a)`. Therefore, only one answer and count is `1`.
+
+^^^^^^ [RULE MISSED]: `Y` inside `X=f(Y,a)` should be `b`. 
 
 ## P05
 
@@ -64,7 +68,9 @@ Since two atoms are attempted to be unified (via **unification**), the only answ
 
 ## P09
 
-`ancestor_r(tom, X)` shares the process of `ancestor(tom, X)` (also **recursive**) but returns the bottom-most descendants which are `jim` and `sue`, and count is still `6`.
+`ancestor_r(tom, X)` shares the process of `ancestor(tom, X)` (also **recursive**) but returns the bottom-most descendants which are `sue` and `jim`, and count is still `6`.
+
+^^^^^^ [RULE MISSED]: The order of the traceback was switched. Originally, `jim` then `sue` but should be `sue` then `jim`.
 
 ## P10
 
@@ -76,8 +82,9 @@ Since two atoms are attempted to be unified (via **unification**), the only answ
 
 ## P12
 
-`reach_r(a, d)` checks if `a` can reach `d` via **recursion** (acts like modus ponens) and it can, therefore the only answer is `true`, and count is `1`.
+`reach_r(a, d)` checks if `a` can reach `d` via **recursion** (acts like modus ponens) and it can, therefore the only answer is `true`, and count is `unbounded`.
 
+^^^^^^ [RULE MISSED]: The order of the traceback was switched. Originally, `jim` then `sue` but should be `sue` then `jim`.
 
 ## P13
 
