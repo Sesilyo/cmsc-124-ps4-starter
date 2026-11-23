@@ -40,8 +40,18 @@ count_of(_, _, _) :-
 
 % rev(List, Reversed): Reversed holds the elements of List in the other
 % order. Reverse the tail. Then use join/3 to put the head at the end.
-rev(_, _) :-
-    throw(not_implemented(rev/2)).
+% H - head
+% T - tail
+% R - result
+
+% base case
+rev([], []).
+
+
+rev([H|T], R) :-
+    rev(T, RT),         % reverse tail T to get RT
+    join(RT, [H], R).   % attach [H] to the end
+
 
 % last_of(List, X): X is the last element of List. The empty list has no
 % last element, so last_of([], X) must fail.
@@ -53,7 +63,21 @@ last_of(_, _) :-
 % route(From, To, Path): Path is the list of nodes from From to To, in
 % order, following edge/2 and never visiting a node twice. A route from a
 % node to itself is [From].
-%
+
+route(From, To, Path) :-
+    travel(From, To, [From], RevPath),
+    rev(RevPath ,Path).
+
+% base case
+travel(To, To, Visited, Visited).
+
+% recursive case
+travel(From, To, Visited, Path) :-
+    edge(From, Next),
+    \+ elem(Next, Visited),
+    travel(Next, To, [Next|Visited], Path).
+
+
 % reach_r/2 in cases/kb.pl walks the same graph and never ends, because
 % the cycle a -> b -> c -> a always offers one more edge. Carry the nodes
 % you visited. Refuse to step onto one again. \+ Goal is true when Goal
