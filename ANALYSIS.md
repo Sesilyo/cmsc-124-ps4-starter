@@ -1,6 +1,6 @@
 # The Search and the Stack
 
-Case P08
+```
 == trace P08 ==
 Call: ancestor(tom,X)
   Call: parent(tom,X)
@@ -98,7 +98,7 @@ Redo: ancestor(tom,jim)
   Redo: parent(tom,bob)
   Fail: parent(tom,_)
 Fail: ancestor(tom,X)
-== 6 answers ==
+== 6 answers ==```
 
 
 
