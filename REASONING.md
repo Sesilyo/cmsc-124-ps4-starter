@@ -66,43 +66,36 @@ ancestor tries its base clause first, so `parent(tom, X)` gives X=liz first and 
 
 ## P09
 
-ancestor_r tries its recursive clause first, so P binds to liz, whose subtree is a dead end, and then to bob. Inside bob's subtree the recursive clause runs first at every level, so the answers come out as X=sue, X=jim, X=ann, X=pat, and then the base clause adds X=liz and X=bob. The set is the same as P08, only the order differs, so the count is 6.
+`ancestor_r(tom, X)` shares the process of `ancestor(tom, X)` (also **recursive**) but returns the bottom-most descendants which are `sue` and `jim`, and count is still `6`.
+
+^^^^^^ [RULE MISSED]: The order of the traceback was switched. Originally, `jim` then `sue` but should be `sue` then `jim`.
 
 ## P10
 
-ancestor tries its base clause first, so parent(X, jim) gives X=pat first. The recursive clause then scans parent(X, P) in file order and asks ancestor(P, jim) for each fact, and the successes give X=bob second and X=tom third. The count is 3 with 1 base answer plus 2 recursive answers.
-
-Correction:
-`parent(tom,bob)` comes before `parent(bob,pat)`. The recursive clause follow the file order top to bottom, I read it from bottom up, therefore X=tom should be second. 
+`ancestor(X, jim)` looks for `jim`'s ancestors **recursively** which are `pat` and `bob` directly, and count is `3` because `tom` is the top-most ancestor.
 
 ## P11
 
-reach tries its first clause first, whose body starts with another call to reach with the same first argument. That call matches the same clause again, so the question never gets smaller, and no edge fact is read, so nothing fails or backtracks and clause 2 is never reached. Because the search never reaches even the first answer, the first field is false, the second is none, and the count is 0.
-
-Correction:
-Since the search never reaches an answer, there is no answer so all three fields should be unbounded. I assumed no answer meant that it was 0 and false.
+`reach(a, d)` checks via **recursion** **left-to-right** but since target is `a` and recursively enters the first parameter first, the result is `unbounded`.
 
 ## P12
 
-reach_r tries its base clause first, which fails because there is no edge(a, d), so the recursive clause walks a to b to c, and edge(c, d) succeeds, so the first answer is true. The cycle a, b, c, a and the lack of a visited list let the search take edge(c, a) and prove the same fact again, so the second answer is true. The search never runs out of options, so the count is unbounded.
+`reach_r(a, d)` checks if `a` can reach `d` via **recursion** (acts like modus ponens) and it can, therefore the only answer is `true`, and count is `unbounded`.
+
+^^^^^^ [RULE MISSED]: The order of the traceback was switched. Originally, `jim` then `sue` but should be `sue` then `jim`.
 
 ## P13
 
-Only the recursive clause of len matches [a, b, c], so it asks about the tail again and again until the list is empty. The base clause gives 0 and `is` adds 1 on the way back up for each element, so the first answer is N=3. No other clause matches at any level, so the second is none and the count is 1.
-
+`len([a, b, c], N)` records the list's length using **recursion** on variable `N` until the base case. Therefore, the only answer is `N=3` and count is `1`.
 
 ## P14
 
-The third argument is bound and the first two are not, so join runs backward. Clause 1 is tried first and gives X=[],Y=[1,2]. Clause 2 then moves 1 into X and asks join(T, Y, [2]), which gives X=[1],Y=[2] next, and once more gives X=[1,2],Y=[] when the third argument reaches []. The count is 3.
+`join(X, Y, [1, 2])` uses **list decomposition** to partition `[1, 2]` into all valid pairings of `X` and `Y`. The first answer is `X=[],Y=[1, 2]`, the second is `X=[1],Y=[2]`, and count is `3` because `X=[1,2],Y=[]` is also valid.
 
 ## P15
 
-The goals run left to right, so X > 2 is tried before elem has bound X. X is unbound and > needs numbers on both sides, so Prolog throws an instantiation error instead of failing. The search stops there and never reaches `elem`, so the first field, the second field is unbounded, and the count is error.
-
-Correction:
-Since the prolog throws an error, all fields must then be error and not unbounded which is different from P11 in which the answer was simply never found.
+`X > 2, elem(X, [1-3])` is an invalid statement because arithmetic comparison on unbound variable `X` uses **left-to-right evaluation order**. This triggers an all three fields to be `error`.
 
 ## P16
 
-The goals run left to right, so elem binds X to 1 first and X > 2 is then checked with X already a number. That comparison fails for 1 and 2, so the search backtracks into elem each time, and only X=3 passes. The first answer is X=3, the second is none, and the count is 1.
-
+`elem(X, [1-3]), X > 2` first binds `X` to list elements via **unification** before testing `X > 2` and by **left-to-right evaluation order**, it is now valid. Only `X=3` satisfies the condition, making it the only answer so count `1`.
